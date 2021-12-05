@@ -2,21 +2,35 @@ import matplotlib.pyplot as plt
 import boto3
 import pandas as pd
 import plotly.graph_objects as go
+import os
 
-df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2014_apple_stock.csv')
+session = boto3.Session(
+    ACCESS_KEY = 'AKIA34C2RRHTKN6AXXV3'
+    SECRET_KEY = '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'
+)
 
-fig = go.Figure(go.Scatter(x = df['AAPL_x'], y = df['AAPL_y'],
+s3 = session.resource('s3')
+
+REQ = input()
+s3.Bucket('redrevoraisebucket').download_file('{request}'.format(request = REQ), '{request}.csv'.format(request = REQ))
+
+df = pd.read_csv('{request}.csv').format(request = REQ)
+
+fig = go.Figure(go.Scatter(x = df['Date'], y = df['High'],
                   name='Share Prices (in USD)'))
 
-fig.update_layout(title='Apple Share Prices over time (2014)',
-                   plot_bgcolor='rgb(230, 230,230)',
+fig.update_layout(title='Apple Share Prices over time ({date})'.format(date = 'Date'),
+                   plot_bgcolor='rgb(230,230,230)',
                    showlegend=True)
 
 fig.show()
 
-plt.savefig('test.png')
+plt.savefig('{request}.png'.format(request = REQ))
 ACCESS_KEY = 'AKIA34C2RRHTKN6AXXV3'
 SECRET_KEY = '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' 
 s3 = boto3.client('s3', aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
-s3.upload_file('test.png', 'redrevoraisebucket', 'test.png')
+s3.upload_file('{request}.png'.format(request = REQ), 'redrevoraisebucket', '{request}.png'.format(request = REQ))
+
+os.remove('{request}.csv'.format(request = REQ))
+os.remove('{request}.png'.format(request = REQ))
 
