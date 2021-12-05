@@ -25,11 +25,11 @@ fig.update_layout(title='Apple Share Prices over time ({date})'.format(date = 'D
 
 fig.show()
 
-plt.savefig('{request}.png'.format(request = REQ))
+fig.write_image('{request}.jpeg'.format(request = REQ))
 ACCESS_KEY = 'AKIA34C2RRHTKN6AXXV3'
 SECRET_KEY = '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' 
 s3 = boto3.client('s3', aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
-s3.upload_file('{request}.png'.format(request = REQ), 'redrevoraisebucket', '{request}.png'.format(request = REQ))
+s3.upload_file('{request}.jpeg'.format(request = REQ), 'redrevoraisebucket', '{request}.jpeg'.format(request = REQ))
 
 os.remove('{request}.csv'.format(request = REQ))
 os.remove('{request}.png'.format(request = REQ))
