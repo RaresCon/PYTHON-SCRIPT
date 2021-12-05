@@ -4,17 +4,17 @@ import pandas as pd
 import plotly.graph_objects as go
 import os
 
-session = boto3.Session(
-    ACCESS_KEY = 'AKIA34C2RRHTKN6AXXV3'
-    SECRET_KEY = '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'
-)
-
-s3 = session.resource('s3')
-
 REQ = input()
-s3.Bucket('redrevoraisebucket').download_file('{request}'.format(request = REQ), '{request}.csv'.format(request = REQ))
 
-df = pd.read_csv('{request}.csv').format(request = REQ)
+BUCKET_NAME = 'redrevoraisebucket'
+BUCKET_FILE_NAME = '{request}.csv'.format(request = REQ)
+LOCAL_FILE_NAME = '{request}.csv'.format(request = REQ)
+
+def download_s3_file():
+    s3 = boto3.client('s3')
+    s3.download_file(BUCKET_NAME, BUCKET_FILE_NAME, LOCAL_FILE_NAME)
+
+df = pd.read_csv('{request}.csv'.format(request = REQ))
 
 fig = go.Figure(go.Scatter(x = df['Date'], y = df['High'],
                   name='Share Prices (in USD)'))
