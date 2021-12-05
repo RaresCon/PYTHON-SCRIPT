@@ -11,7 +11,7 @@ BUCKET_FILE_NAME = '{request}.csv'.format(request = REQ)
 LOCAL_FILE_NAME = '{request}.csv'.format(request = REQ)
 
 def download_s3_file():
-    s3 = boto3.client('s3')
+    s3 = boto3.resource('s3', use_ssl=False, verify=False)
     s3.download_file(BUCKET_NAME, BUCKET_FILE_NAME, LOCAL_FILE_NAME)
 
 df = pd.read_csv('{request}.csv'.format(request = REQ))
