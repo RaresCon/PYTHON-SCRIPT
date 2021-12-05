@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+import boto3
 import pandas as pd
 import plotly.graph_objects as go
 
@@ -11,4 +13,10 @@ fig.update_layout(title='Apple Share Prices over time (2014)',
                    showlegend=True)
 
 fig.show()
+
+plt.savefig('test.png')
+ACCESS_KEY = 'AKIA34C2RRHTKN6AXXV3'
+SECRET_KEY = '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' 
+s3 = boto3.client('s3', aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
+s3.upload_file('test.png', 'redrevoraisebucket', 'test.png')
 
